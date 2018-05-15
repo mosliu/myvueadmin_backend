@@ -1,0 +1,1 @@
+bee generate appcode -tables="mva_framework_user,mva_framework_auth,mva_framework_role,mva_framework_role_auth" -driver=mysql -conn="myvue:myvue@tcp(127.0.0.1:3306)/myvueadmin" -level=3
