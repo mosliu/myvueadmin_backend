@@ -29,7 +29,9 @@ func initLogger(levelConsole string, levelFile string) {
         Log.Fatal(err)
         Log.SetLevel(logrus.DebugLevel)
     } else {
+        //Log.Info("setLevel to :",lvlConsole)
         Log.SetLevel(lvlConsole)
+        //Log.Debug("set Level to :",lvlConsole)
     }
 
     // force colors on for TextFormatter
@@ -50,9 +52,9 @@ func initLogger(levelConsole string, levelFile string) {
     lvlFile, err := logrus.ParseLevel(levelFile)
     if err != nil {
         Log.Fatal(err)
-        Log.SetLevel(logrus.InfoLevel)
+        LogF.SetLevel(logrus.InfoLevel)
     } else {
-        Log.SetLevel(lvlFile)
+        LogF.SetLevel(lvlFile)
     }
 }
 

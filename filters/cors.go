@@ -12,7 +12,7 @@ func assembleCorsFilter() {
         AllowOrigins:     []string{"*"},
         AllowMethods:     []string{"POST","GET","OPTIONS","DELETE"},
         //AllowHeaders:     []string{"Origin"},
-        AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "content-type","X-Token"},
+        AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin","Access-Control-Allow-Credentials", "content-type","X-Token"},
         //ExposeHeaders:    []string{"Content-Length"},
         AllowCredentials: true,
     }))

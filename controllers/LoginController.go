@@ -34,6 +34,10 @@ func (c *LoginController) URLMapping() {
 // @Failure 403 body is empty
 // @router /login [post]
 func (c *LoginController) Login() {
+    //sess := c.StartSession()
+    //log.Warn(sess.SessionID())
+    //log.Warn(c.CruSession.SessionID())
+    log.Info(c.Ctx.Input.Cookie("beegosessionID"))
     //vue axio提交的 isajax是 false
     //logs.Debug(c.Ctx.Input.IsAjax())
 
@@ -53,7 +57,7 @@ func (c *LoginController) Login() {
     log.WithField("form",logindata).Debug("login form content")
     username := strings.TrimSpace(logindata.Username)
     password := strings.TrimSpace(logindata.Password)
-    log.Debug(username,password)
+    //log.Debug(username,password)
     user, err := CheckLogin(username, password)
     if err == nil {
         //accesslist, _ := GetAccessList(user.Id)
@@ -61,7 +65,8 @@ func (c *LoginController) Login() {
         user.LastIp = c.getClientIp()
         user.LastLogin = time.Now().Unix()
         user.Update()
-        c.SetSession("userinfo", user)
+        c.SetSession("user", user)
+        log.WithField("user",c.GetSession("user")).Debug()
 
         token := GenerateToken(user,user.LastIp)
         c.SetSession("token", token)

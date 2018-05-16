@@ -19,7 +19,9 @@ func (this *BaseController) Prepare() {
     controllerName, actionName := this.GetControllerAndAction()
     this.controllerName = strings.ToLower(controllerName[0 : len(controllerName)-10])
     this.actionName = strings.ToLower(actionName)
-    log.Debug("controllerName:" + this.controllerName)
+    //log = log.WithField("CName",controllerName)
+    //TODO 带来效率降低否？
+    log = log.WithField("Action",actionName)
 
     this.Data["version"] = beego.AppConfig.String("version")
     this.Data["siteName"] = beego.AppConfig.String("site.name")

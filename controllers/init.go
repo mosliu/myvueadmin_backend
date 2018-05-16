@@ -5,5 +5,5 @@ import (
 )
 
 var log = logs.Log.WithFields(logrus.Fields{
-    "pkg":"controllers",
+    "pkg":"ctrl",
 })

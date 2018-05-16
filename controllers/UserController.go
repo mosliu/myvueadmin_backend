@@ -6,8 +6,6 @@ import (
 	"github.com/mosliu/myvueadmin_backend/models"
 	"strconv"
 	"strings"
-
-    "github.com/astaxie/beego"
 )
 
 // UserController operations for User
@@ -34,20 +32,44 @@ func (c *UserController) URLMapping() {
 // @Failure 403 :id is empty
 // @router /user/info [get]
 func (c *UserController) Info() {
+    //sess := c.StartSession()
+
+    //log.Warn(sess.SessionID())
+    //log.Warn(c.CruSession.SessionID())
+    log.Info(c.Ctx.Input.Cookie("beegosessionID"))
     //if err := json.Unmarshal(c.Ctx.Input.RequestBody, &form); err != nil {
     //    c.Rsp(MSG_ERR, err.Error())
     //}
     //fmt.Println(form)
-    c.ParseForm(&form)
-    //fmt.Println(form)
-    beego.BeeLogger.Debug("this form is: %v",form)
+    //log.Debug("aaaaaaaaaaaaaaaaaaaaaaaa")
+    xtoken := c.Ctx.Input.Header("X-TOKEN")
+    log.Debug(xtoken)
+    sessiontoken := c.GetSession("token")
+    log.Debug(sessiontoken)
+    user,ok :=c.GetSession("user").(models.User)
+    if !ok{
+        //无存储用户？返回登录
+    }
+    genToken := GenerateToken(user,c.getClientIp())
+
+    if sessiontoken != xtoken {
+        //登出。
+    }
+    if sessiontoken != genToken {
+        // 用户IP发生变化，为防止中间人攻击，是否登出？
+    }
+
+    //c.ParseForm(&form)
+    //log.Infof("this form is: %v",form)
     data := make(map[string]interface{})
     var roles [2]string
     roles[0] = "admin"
     //roles[1] = "editor"
     data["roles"]=roles
-    data["name"]="sss"
+    data["name"]=user.LoginName
     data["avatar"]="http://cdn.v2ex.com/avatar/37bc/8765/233253_normal.png"
+    log.WithField("user",user).Debug(data)
+
     c.Rsp(MSG_OK, "用户信息",data)
 }
 

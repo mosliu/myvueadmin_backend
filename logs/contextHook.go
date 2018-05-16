@@ -57,11 +57,13 @@ func findCaller(skip int) string {
     file := ""
     line := 0
     for i := 0; i < 10; i++ {
-        file, line = getCaller(skip + i)
+        file, line = getCaller(skip + i,2)
         if !strings.HasPrefix(file, "logrus") {
+            file, line = getCaller(skip + i,1)
             break
         }
     }
+
     //return color.MagentaString("%s:%d", file, line)
     return fmt.Sprintf("%s:%d", file, line)
 }
@@ -69,7 +71,8 @@ func findCaller(skip int) string {
 // 但是我觉得有 文件名和行号就够定位问题, 因此忽略了caller返回的第一个值:pc
 // 在标准库log里面我们可以选择记录文件的全路径或者文件名, 但是在使用过程成并发最合适的,
 // 因为文件的全路径往往很长, 而文件名在多个包中往往有重复, 因此这里选择多取一层, 取到文件所在的上层目录那层.
-func getCaller(skip int) (string, int) {
+// remain :返回的string保留的路径层数，例如logrus/entry 为2层  entry为1层，因此在判断logrus包时需要设定为2
+func getCaller(skip int,remain int) (string, int) {
     _, file, line, ok := runtime.Caller(skip)
     //fmt.Println(file)
     //fmt.Println(line)
@@ -80,7 +83,7 @@ func getCaller(skip int) (string, int) {
     for i := len(file) - 1; i > 0; i-- {
         if file[i] == '/' {
             n++
-            if n >= 1 {
+            if n >= remain {
                 file = file[i+1:]
                 break
             }
